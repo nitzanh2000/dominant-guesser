@@ -7,16 +7,16 @@ const FLATS = {
   Eb: "D#",
   Gb: "F#",
   Ab: "G#",
-  Bb: "A#"
+  Bb: "A#",
 };
 
 // Intervals in semitones
 const CHORD_INTERVALS = {
-  maj:  [0, 4, 7],        // major triad
-  min:  [0, 3, 7],        // minor triad
-  "7":  [0, 4, 7, 10],    // dominant 7
-  maj7: [0, 4, 7, 11],    // major 7
-  min7: [0, 3, 7, 10],    // minor 7
+  maj: [0, 4, 7], // major triad
+  min: [0, 3, 7], // minor triad
+  7: [0, 4, 7, 10], // dominant 7
+  maj7: [0, 4, 7, 11], // major 7
+  min7: [0, 3, 7, 10], // minor 7
 };
 
 // Normalize flats to sharps
@@ -52,6 +52,8 @@ function transpose(root, semitones) {
   return NOTES[(i + semitones + 12) % 12];
 }
 
+const randomOctave = () => Math.floor(Math.random() * 3) + 3;
+
 // Convert chord name into list of note names
 export function chordToNotes(chordName, octave = 4) {
   const { root, type } = parseChordName(chordName);
@@ -59,7 +61,9 @@ export function chordToNotes(chordName, octave = 4) {
   const intervals = CHORD_INTERVALS[type];
   if (!intervals) throw new Error(`Intervals missing for chord type: ${type}`);
 
-  const notes = intervals.map((st) => `${transpose(root, st)}${octave}`);
+  const notes = intervals.map(
+    (st) => `${transpose(root, st)}${randomOctave()}`
+  );
 
   return {
     name: chordName,

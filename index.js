@@ -8,11 +8,10 @@ import {
 import { getDominantAndSubdominant, getRandomScale } from "./utils.js";
 import { chordToNotes } from "./chordToNotes.js";
 
-function randomArray(list, length) {
+function randomArray(func, length) {
   const result = [];
   for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * list.length);
-    result.push(list[randomIndex]);
+    result.push(func());
   }
   return result;
 }
@@ -25,14 +24,15 @@ const main = async () => {
   const scale = getRandomScale();
   const chordNames = getDominantAndSubdominant(scale);
 
-  const tonicNotes = { ...chordToNotes(chordNames.tonic), place: "1" };
-  const subdominantNotes = {
-    ...chordToNotes(chordNames.subdominant),
-    place: "4",
-  };
-  const dominantNotes = {
-    ...chordToNotes(chordNames.dominant),
-    place: "5",
+  const creataChord = (chordName, place) => ({
+    ...chordToNotes(chordName),
+    place,
+  });
+
+  const getRandomProperty = (obj) => {
+    const keys = Object.keys(obj);
+    const key = keys[Math.floor(Math.random() * keys.length)];
+    return [obj[key], key];
   };
 
   try {
@@ -48,8 +48,9 @@ const main = async () => {
 
 
         `);
+    const tonic = creataChord(...getRandomProperty(chordNames));
 
-    await playChordSequence(output, [tonicNotes], {
+    await playChordSequence(output, [tonic], {
       durationMs: 7000,
       gapMs: 200,
       channel: 0,
@@ -69,9 +70,8 @@ const main = async () => {
 
     await new Promise((res) => setTimeout(res, 1000));
 
-    // 3. Define chords however you like
     const chords = randomArray(
-      [tonicNotes, subdominantNotes, dominantNotes],
+      () => creataChord(...getRandomProperty(chordNames)),
       4
     );
 
@@ -82,11 +82,19 @@ const main = async () => {
       velocity: 100,
     });
 
-    console.log(`The result are: ${chords.map(({ place }) => `${place}`)}
+    const PLACES = { tonic: 1, subdominant: 4, dominant: 5 };
+
+    console.log(`The result are: ${chords.map(
+      ({ place }) => `${PLACES[place]}`
+    )}
 
 The scale was: ${scale}
 And the chords: 
-${chords.map(({ name }) => `${name}`)}`);
+,${chords.map(
+      ({ name, notes }) => `${name}:  ${notes}
+`
+    )}
+`);
   } finally {
     closeMidiOutput(output);
   }
