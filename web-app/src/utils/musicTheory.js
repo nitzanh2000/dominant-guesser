@@ -55,15 +55,28 @@ function transpose(root, semitones) {
 const randomOctave = () => Math.floor(Math.random() * 3) + 3;
 
 // Convert chord name into list of note names
-export function chordToNotes(chordName) {
+export function chordToNotes(chordName, level = 1) {
   const { root, type } = parseChordName(chordName);
 
   const intervals = CHORD_INTERVALS[type];
   if (!intervals) throw new Error(`Intervals missing for chord type: ${type}`);
 
-  const notes = intervals.map(
-    (st) => `${transpose(root, st)}${randomOctave()}`
-  );
+  const generateNotesByLevel = (level) => {
+    const DEFULT_OCTIVE = 4;
+    switch (level) {
+      case 1:
+        return intervals.map((st) => `${transpose(root, st)}${DEFULT_OCTIVE}`);
+      case 2:
+        const octive = randomOctave();
+        return intervals.map((st) => `${transpose(root, st)}${octive}`);
+      case 3:
+        return intervals.map((st) => `${transpose(root, st)}${randomOctave()}`);
+      default:
+        return intervals.map((st) => `${transpose(root, st)}${DEFULT_OCTIVE}`);
+    }
+  };
+
+  const notes = generateNotesByLevel(level);
 
   return {
     name: chordName,

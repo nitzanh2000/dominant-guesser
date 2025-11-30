@@ -13,9 +13,15 @@ function App() {
   const [userGuesses, setUserGuesses] = useState([]);
   const [playbackStatus, setPlaybackStatus] = useState('idle'); // idle, tonic, sequence
   const [activeChordIndex, setActiveChordIndex] = useState(-1);
+  const [level, setLevel] = useState(() => {
+    const saved = localStorage.getItem('dominant-guesser-level');
+    return saved ? parseInt(saved, 10) : 1;
+  });
 
-  const startQuiz = async () => {
+  const startQuiz = async (selectedLevel = 1) => {
     await initAudio();
+    setLevel(selectedLevel);
+    localStorage.setItem('dominant-guesser-level', selectedLevel);
     
     // Generate new quiz data
     const newScale = getRandomScale();
@@ -25,7 +31,7 @@ function App() {
     
     // Helper to create chord object
     const createChord = (chordName, place) => ({
-      ...chordToNotes(chordName),
+      ...chordToNotes(chordName, selectedLevel),
       place,
     });
 
@@ -48,7 +54,7 @@ function App() {
   const playQuizSequence = async (currentScale, chordNames, currentChords) => {
     // Play Tonic
     setPlaybackStatus('tonic');
-    const tonic = { ...chordToNotes(chordNames.tonic), place: 'tonic' };
+    const tonic = { ...chordToNotes(chordNames.tonic, level), place: 'tonic' };
     
     await playChord(tonic.notes, 4); // 4 seconds roughly if 1n is whole note
     // We want explicit 4 seconds wait for the text to show
@@ -94,7 +100,7 @@ function App() {
 
   return (
     <div className="app-container">
-      {stage === 'welcome' && <WelcomeScreen onStart={startQuiz} />}
+      {stage === 'welcome' && <WelcomeScreen onStart={startQuiz} initialLevel={level} />}
       
       {stage === 'quiz' && (
         <div className="quiz-session">
