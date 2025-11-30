@@ -6,7 +6,8 @@ const WelcomeScreen = ({ onStart }) => {
       <h1>Musical Hearing Quiz</h1>
       <p>Test your ability to identify Tonic, Subdominant, and Dominant chords.</p>
       <p>Listen carefully to the sequence and guess the chords.</p>
-      
+      <p>By Nitzan H</p>
+
       {isMobile && (
         <div className="warning-box">
           <p><strong>📱 Mobile Users:</strong> Please turn off Silent Mode / Ringer Switch to hear the audio.</p>
