@@ -52,7 +52,7 @@ function App() {
     
     await playChord(tonic.notes, 4); // 4 seconds roughly if 1n is whole note
     // We want explicit 4 seconds wait for the text to show
-    await new Promise(r => setTimeout(r, 4000));
+    await new Promise(r => setTimeout(r, 4500));
     
     setPlaybackStatus('sequence');
     
