@@ -1,0 +1,240 @@
+:root {
+  --bg-color: #0f172a;
+  --text-color: #f8fafc;
+  --primary-color: #3b82f6;
+  --primary-hover: #2563eb;
+  --secondary-color: #64748b;
+  --accent-color: #8b5cf6;
+  --success-color: #22c55e;
+  --error-color: #ef4444;
+  --card-bg: #1e293b;
+  --font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app-container {
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.screen {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  background: linear-gradient(to right, var(--primary-color), var(--accent-color));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+h2 {
+  font-size: 2rem;
+  margin-bottom: 2rem;
+}
+
+p {
+  font-size: 1.1rem;
+  color: #94a3b8;
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.5);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.6);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  border: 2px solid var(--secondary-color);
+  color: var(--secondary-color);
+  margin-right: 1rem;
+  margin-bottom: 1rem;
+}
+
+.btn-secondary:hover {
+  border-color: var(--text-color);
+  color: var(--text-color);
+}
+
+/* Playback Visualizer */
+.visualizer {
+  height: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 3rem;
+}
+
+.wave {
+  width: 10px;
+  height: 20px;
+  background-color: var(--accent-color);
+  border-radius: 5px;
+  transition: height 0.2s;
+}
+
+.visualizer.playing .wave {
+  animation: wave 1s infinite ease-in-out;
+}
+
+.visualizer.playing .wave:nth-child(2) { animation-delay: 0.1s; }
+.visualizer.playing .wave:nth-child(3) { animation-delay: 0.2s; }
+
+@keyframes wave {
+  0%, 100% { height: 20px; }
+  50% { height: 80px; }
+}
+
+/* Quiz Form */
+.guesses-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.guess-item {
+  background-color: var(--card-bg);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.guess-item.active-playing {
+  border-color: var(--accent-color);
+  box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+  transform: scale(1.02);
+}
+
+.chord-number {
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.options {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.option-btn {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-color);
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+}
+
+.option-btn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.option-btn.selected {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+/* Results */
+.results-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.result-item {
+  background-color: var(--card-bg);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border-left: 4px solid transparent;
+}
+
+.result-item.correct {
+  border-left-color: var(--success-color);
+}
+
+.result-item.incorrect {
+  border-left-color: var(--error-color);
+}
+
+.chord-index {
+  font-weight: bold;
+  color: var(--secondary-color);
+}
+
+.guess-details {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+}
+
+.user-guess {
+  font-weight: 600;
+}
+
+.actual-answer {
+  font-size: 0.9rem;
+  color: var(--secondary-color);
+}
+
+.scale-info {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+  color: var(--primary-color);
+}
