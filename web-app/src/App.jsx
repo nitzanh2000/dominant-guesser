@@ -9,6 +9,7 @@ import { initAudio, playSequence, playChord } from './utils/audioEngine';
 function App() {
   const [stage, setStage] = useState('welcome'); // welcome, quiz, results
   const [scale, setScale] = useState(null);
+  const [tonicChord, setTonicChord] = useState({});
   const [chords, setChords] = useState([]);
   const [userGuesses, setUserGuesses] = useState([]);
   const [playbackStatus, setPlaybackStatus] = useState('idle'); // idle, tonic, sequence
@@ -38,6 +39,9 @@ function App() {
     const PLACES = ['tonic', 'subdominant', 'dominant'];
     const getRandomPlace = () => PLACES[Math.floor(Math.random() * PLACES.length)];
 
+    const tonicChord = { ...chordToNotes(chordNames.tonic, level), place: 'tonic' };
+    setTonicChord(tonicChord);
+
     // Generate 4 random chords
     const newChords = Array(4).fill(null).map(() => {
       const place = getRandomPlace();
@@ -48,15 +52,14 @@ function App() {
     setStage('quiz');
     
     // Play sequence
-    playQuizSequence(newScale, chordNames, newChords);
+    playQuizSequence(tonicChord, newChords);
   };
 
-  const playQuizSequence = async (currentScale, chordNames, currentChords) => {
+  const playQuizSequence = async (tonicChord, currentChords) => {
     // Play Tonic
     setPlaybackStatus('tonic');
-    const tonic = { ...chordToNotes(chordNames.tonic, level), place: 'tonic' };
-    
-    await playChord(tonic.notes, 4); // 4 seconds roughly if 1n is whole note
+    //const tonic = { ...chordToNotes(chordNames.tonic, level), place: 'tonic' };
+    await playChord(tonicChord.notes, 4); // 4 seconds roughly if 1n is whole note
     // We want explicit 4 seconds wait for the text to show
     await new Promise(r => setTimeout(r, 4500));
     
@@ -78,12 +81,7 @@ function App() {
 
   const handleReplay = () => {
     if (playbackStatus !== 'idle') return;
-    const chordNames = getDominantAndSubdominant(scale);
-    playQuizSequence(scale, chordNames, chords);
-  };
-
-  const handleNext = () => {
-    // No longer needed as separate step
+    playQuizSequence(tonicChord, chords);
   };
 
   const handleSubmit = (guesses) => {
